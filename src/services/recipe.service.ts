@@ -1,6 +1,6 @@
-import connectDB from "../lib/mongodb"; 
-import { Recipe } from "../models/Recipe";
-import { IRecipe } from "../types/IRecipe";
+import connectDB from "@/lib/mongodb"; 
+import { Recipe } from "@/models/Recipe";
+import { IRecipe } from "@/types/IRecipe";
 
 export class RecipeService {
   static async getAllRecipes(): Promise<IRecipe[]> {

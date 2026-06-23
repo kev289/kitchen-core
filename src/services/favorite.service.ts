@@ -1,6 +1,6 @@
-import connectDB from "../lib/mongodb";
-import { Favorite } from "../models/Favorite";
-import { IFavorite } from "../types/IFavorite";
+import connectDB from "@/lib/mongodb";
+import { Favorite } from "@/models/Favorite";
+import { IFavorite } from "@/types/IFavorite";
 
 export class FavoriteService {
   static async getFavoritesByUser(userId: string): Promise<IFavorite[]> {

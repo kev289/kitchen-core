@@ -1,5 +1,5 @@
 import mongoose, { Model, Schema } from "mongoose";
-import { IRecipe } from "../types/IRecipe";
+import { IRecipe } from "@/types/IRecipe";
 
 const RecipeSchema: Schema = new Schema<IRecipe>(
     {

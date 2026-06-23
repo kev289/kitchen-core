@@ -1,5 +1,5 @@
 import mongoose, { Model, Schema } from "mongoose";
-import { IFavorite } from "../types/IFavorite";
+import { IFavorite } from "@/types/IFavorite";
 
 const FavoriteSchema = new Schema(
     {

@@ -1,9 +1,9 @@
-import connectDB from "../lib/mongodb";
-import { User as UserModel } from "../models/User";
-import { authLib } from "../lib/auth";
-import { IUser } from "../types/IUser";
+import connectDB from "@/lib/mongodb";
+import { User as UserModel } from "@/models/User";
+import { authLib } from "@/lib/auth";
+import { IUser } from "@/types/IUser";
 import z from "zod";
-import { LoginValidation } from "../lib/validations";
+import { LoginValidation } from "@/lib/validations";
 
 type LoginInput = z.infer<typeof LoginValidation>;
 

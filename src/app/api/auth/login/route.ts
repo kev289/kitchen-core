@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { LoginValidation } from "@/src/lib/validations";
-import { userService } from "@/src/services/auth.service"; 
+import { LoginValidation } from "@/lib/validations";
+import { userService } from "@/services/auth.service"; 
 
 export async function POST(req: Request) {
     try {
