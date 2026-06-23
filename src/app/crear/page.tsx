@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@heroui/react/card";
@@ -25,12 +25,6 @@ export default function CrearRecetaPage() {
   const [steps, setSteps] = useState<string[]>([""]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (!authLoading && !user) {
-      router.push("/login");
-    }
-  }, [user, authLoading, router]);
 
   const handleIngredientChange = (i: number, value: string) => {
     const copy = [...ingredients];
@@ -113,6 +107,10 @@ export default function CrearRecetaPage() {
         <p className="text-gray-400">Cargando...</p>
       </div>
     );
+  }
+
+  if (!user) {
+    return null;
   }
 
   return (

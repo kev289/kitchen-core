@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useFavorites } from "@/context/FavoritesContext";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Card, CardContent, CardFooter, CardTitle } from "@heroui/react/card";
 import { Button } from "@heroui/react/button";
@@ -19,17 +18,12 @@ type FavoriteRecipe = {
 export default function FavoritesPage() {
   const { user, loading: authLoading } = useAuth();
   const { favoriteIds } = useFavorites();
-  const router = useRouter();
   const [recipes, setRecipes] = useState<FavoriteRecipe[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (authLoading) return;
-
-    if (!user) {
-      router.push("/login");
-      return;
-    }
+    if (!user) return;
 
     let cancelled = false;
 
@@ -50,15 +44,24 @@ export default function FavoritesPage() {
     return () => {
       cancelled = true;
     };
-  }, [user, authLoading, router, favoriteIds]);
+  }, [user, authLoading, favoriteIds]);
 
-  if (authLoading || loading) {
+  if (authLoading) {
     return (
       <div className="flex flex-1 items-center justify-center">
-        <div className="text-center space-y-3">
-          <div className="w-8 h-8 border-2 border-gray-900 border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-gray-400 text-sm">Cargando favoritos...</p>
-        </div>
+        <div className="w-8 h-8 border-2 border-gray-900 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
+
+  if (loading) {
+    return (
+      <div className="flex flex-1 items-center justify-center">
+        <div className="w-8 h-8 border-2 border-gray-900 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }

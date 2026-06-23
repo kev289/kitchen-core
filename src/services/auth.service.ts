@@ -5,7 +5,7 @@ import { IUser } from "@/types/IUser";
 import z from "zod";
 import { LoginValidation } from "@/lib/validations";
 import { ILoginResponse } from "@/types/IAuth";
-import { emailService } from "@/services/email.service";
+import { sendEmail } from "@/services/email.service";
 
 type LoginInput = z.infer<typeof LoginValidation>;
 
@@ -28,7 +28,8 @@ export const userService = {
             password: hashPassword,
         });
 
-        emailService.sendWelcomeEmail(newUser.email, newUser.name);
+        sendEmail(newUser.email, "¡Bienvenido a GourmetDev!", "<p>Gracias por registrarte en nuestra plataforma de recetas.</p>")
+          .catch(() => console.log("[AUTH] Email skipped — no rompe el registro"));
 
         return newUser;
     },
