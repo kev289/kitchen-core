@@ -7,4 +7,5 @@ export interface IRecipe {
   ingredients: string[];
   steps: string[];
   servings: number;
+  author: string; 
 }

@@ -4,17 +4,9 @@ import { authLib } from "@/lib/auth";
 import { IUser } from "@/types/IUser";
 import z from "zod";
 import { LoginValidation } from "@/lib/validations";
+import { ILoginResponse } from "@/types/IAuth";
 
 type LoginInput = z.infer<typeof LoginValidation>;
-
-export interface ILoginResponse {
-  readonly accessToken: string;
-  readonly refreshToken: string;
-  readonly user: {
-    readonly name: string;
-    readonly email: string;
-  };
-}
 
 export const userService = {
     register: async (data: IUser & { readonly confirmPassword?: string }): Promise<IUser> => {
@@ -75,4 +67,13 @@ export const userService = {
             },
         };
     },
+
+    getUserById: async (id: string) => {
+        await connectDB();
+        const user = await UserModel.findById(id).select("-password");
+        if (!user) {
+            throw new Error("Usuario no encontrado");
+        }
+        return user;
+    }
 };
