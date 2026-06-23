@@ -1,20 +1,10 @@
 import { NextResponse } from "next/server";
 import { FavoriteService } from "@/services/favorite.service";
-import { jwtVerify } from 'jose';
-
-async function getUserIdFromToken(req: Request) {
-  const rawSecret = process.env.JWT_SECRET;
-  if (!rawSecret) throw new Error("JWT_SECRET is not configured");
-  const secret = new TextEncoder().encode(rawSecret);
-  const token = req.headers.get('Authorization')?.split(' ')[1];
-  if (!token) throw new Error("No token provided");
-  const { payload } = await jwtVerify(token, secret);
-  return payload.userId as string;
-}
+import { authLib } from "@/lib/auth";
 
 export async function GET(req: Request) {
   try {
-    const userId = await getUserIdFromToken(req);
+    const userId = await authLib.getUserIdFromRequest(req);
     const favorites = await FavoriteService.getFavoritesByUser(userId);
     return NextResponse.json(favorites, { status: 200 });
   } catch {
@@ -24,7 +14,7 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    const userId = await getUserIdFromToken(req);
+    const userId = await authLib.getUserIdFromRequest(req);
     const { recipeId } = await req.json();
 
     const result = await FavoriteService.toggleFavorite(userId, recipeId);
