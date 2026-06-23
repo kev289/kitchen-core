@@ -5,6 +5,7 @@ import { IUser } from "@/types/IUser";
 import z from "zod";
 import { LoginValidation } from "@/lib/validations";
 import { ILoginResponse } from "@/types/IAuth";
+import { emailService } from "@/services/email.service";
 
 type LoginInput = z.infer<typeof LoginValidation>;
 
@@ -26,6 +27,8 @@ export const userService = {
             email: emailSanitized,
             password: hashPassword,
         });
+
+        emailService.sendWelcomeEmail(newUser.email, newUser.name);
 
         return newUser;
     },

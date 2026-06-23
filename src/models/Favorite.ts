@@ -1,7 +1,7 @@
 import mongoose, { Model, Schema } from "mongoose";
 import { IFavorite } from "@/types/IFavorite";
 
-const FavoriteSchema = new Schema(
+const FavoriteSchema = new Schema<IFavorite>(
     {
         userId: { 
             type: Schema.Types.ObjectId, 

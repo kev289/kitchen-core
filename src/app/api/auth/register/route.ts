@@ -13,7 +13,10 @@ export async function POST(req: Request) {
 
         const user = await userService.register(validations.data);
 
-        return NextResponse.json({ message: "Usuario creado con éxito", user }, { status: 201 });
+        return NextResponse.json({
+            message: "Usuario creado con éxito",
+            user: { name: user.name, email: user.email }
+        }, { status: 201 });
 
     } catch (error: unknown) {
         if (error instanceof Error) {

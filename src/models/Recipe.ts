@@ -13,7 +13,8 @@ const RecipeSchema: Schema = new Schema<IRecipe>(
         },
         ingredients: { type: [String], required: true },
         steps: { type: [String], required: true },
-        servings: { type: Number, required: true }
+        servings: { type: Number, required: true },
+        author: { type: String, required: true, trim: true }
     },
     { 
         timestamps: true,

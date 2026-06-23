@@ -4,20 +4,22 @@ import { jwtVerify } from "jose";
 import { RecipeValidation } from "@/lib/validations";
 
 async function getUserIdFromToken(req: Request) {
+    const rawSecret = process.env.JWT_SECRET;
+    if (!rawSecret) throw new Error("JWT_SECRET is not configured");
+    const secret = new TextEncoder().encode(rawSecret);
     const authHeader = req.headers.get("Authorization");
     const token = authHeader?.split(" ")[1];
     if (!token) throw new Error("No token provided");
 
-    const secret = new TextEncoder().encode(process.env.JWT_SECRET);
     const { payload } = await jwtVerify(token, secret);
-    return payload.id as string;
+    return payload.userId as string;
 }
 
 export async function GET() {
     try {
         const recipes = await RecipeService.getAllRecipes();
         return NextResponse.json(recipes, { status: 200 });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Error al obtener las recetas" }, { status: 500 });
     }
 }
@@ -40,7 +42,7 @@ export async function POST(req: Request) {
         });
 
         return NextResponse.json(newRecipe, { status: 201 });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Error interno al procesar la receta" }, { status: 500 });
     }
 }

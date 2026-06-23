@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { jwtVerify } from 'jose';
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   if (pathname.startsWith('/api/auth/login') || pathname.startsWith('/api/auth/register')) {
@@ -19,10 +19,14 @@ export async function middleware(req: NextRequest) {
     const token = authHeader.split(' ')[1];
 
     try {
-      const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+      const rawSecret = process.env.JWT_SECRET;
+      if (!rawSecret) {
+        return NextResponse.json({ error: 'Configuration error' }, { status: 500 });
+      }
+      const secret = new TextEncoder().encode(rawSecret);
       await jwtVerify(token, secret);
       return NextResponse.next(); 
-    } catch (error) {
+    } catch {
       return NextResponse.json({ error: 'Sesión expirada o inválida' }, { status: 403 });
     }
   }

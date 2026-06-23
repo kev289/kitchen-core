@@ -7,7 +7,11 @@ type JWTPayload = {
     name: string;
 }
 
-const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
+const rawSecret = process.env.JWT_SECRET;
+if (!rawSecret) {
+  throw new Error("JWT_SECRET environment variable is not set");
+}
+const JWT_SECRET = new TextEncoder().encode(rawSecret);
 
 export const authLib = {
     hashPassword: (password: string) => bcrypt.hash(password, 10),
