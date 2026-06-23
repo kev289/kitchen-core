@@ -1,0 +1,78 @@
+import connectDB from "../lib/mongodb";
+import { User as UserModel } from "../models/User";
+import { authLib } from "../lib/auth";
+import { IUser } from "../types/IUser";
+import z from "zod";
+import { LoginValidation } from "../lib/validations";
+
+type LoginInput = z.infer<typeof LoginValidation>;
+
+export interface ILoginResponse {
+  readonly accessToken: string;
+  readonly refreshToken: string;
+  readonly user: {
+    readonly name: string;
+    readonly email: string;
+  };
+}
+
+export const userService = {
+    register: async (data: IUser & { readonly confirmPassword?: string }): Promise<IUser> => {
+        await connectDB();
+
+        const emailSanitized = data.email.toLowerCase().trim();
+
+        const existingUser = await UserModel.findOne({ email: emailSanitized });
+        if (existingUser) {
+            throw new Error("El correo ya está registrado"); 
+        }
+
+        const hashPassword = await authLib.hashPassword(data.password);
+
+        const newUser = await UserModel.create({
+            name: data.name.trim(),
+            email: emailSanitized,
+            password: hashPassword,
+        });
+
+        return newUser;
+    },
+
+    login: async (data: LoginInput): Promise<ILoginResponse> => {
+        await connectDB();
+
+        const emailSanitized = data.email.toLowerCase().trim();
+
+        const user = await UserModel.findOne({ email: emailSanitized });
+        if (!user) {
+            throw new Error("Credenciales inválidas");
+        }
+
+        const isPasswordValid = await authLib.comparePassword(data.password, user.password);
+        if (!isPasswordValid) {
+            throw new Error("Credenciales inválidas");
+        }
+
+        if (!user._id) {
+            throw new Error("Error en el identificador del usuario");
+        }
+
+        const payload = {
+            userId: user._id.toString(),
+            email: user.email,
+            name: user.name
+        };
+
+        const accessToken = await authLib.generateAccessToken(payload);
+        const refreshToken = await authLib.generateRefreshToken(payload);
+
+        return {
+            accessToken,
+            refreshToken,
+            user: {
+                name: user.name,
+                email: user.email
+            },
+        };
+    },
+};
