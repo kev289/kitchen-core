@@ -1,34 +1,30 @@
 import mongoose from "mongoose";
 
-function getMongoUri(): string {
-  const uri = process.env.MONGODB_URI;
-  if (!uri) {
-    throw new Error("Put, MONGO_URI in the .env");
-  }
-  return uri;
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+  throw new Error("Doenst have MongoDB URI");
 }
 
 type MongooseCache = {
   conn: typeof mongoose | null;
+
   promise: Promise<typeof mongoose> | null;
 };
 
 declare global {
-  interface Window {
-    mongooseCache?: MongooseCache;
-  }
+  var mongooseCache: MongooseCache | undefined;
 }
 
-const globalContext = globalThis as typeof globalThis & { mongooseCache?: MongooseCache };
-
-const cached: MongooseCache = globalContext.mongooseCache ?? {
+const cached: MongooseCache = global.mongooseCache ?? {
   conn: null,
+
   promise: null,
 };
 
-globalContext.mongooseCache = cached;
+global.mongooseCache = cached;
 
-async function connectDB(): Promise<typeof mongoose> {
+async function connectDB() {
   if (cached.conn) {
     return cached.conn;
   }
@@ -38,16 +34,17 @@ async function connectDB(): Promise<typeof mongoose> {
       bufferCommands: false,
     };
 
-    cached.promise = mongoose.connect(getMongoUri(), opts).then((m) => m);
+    cached.promise = mongoose.connect(MONGODB_URI!, opts).then((m) => {
+      return m;
+    });
   }
 
   try {
     cached.conn = await cached.promise;
-  } catch (error: unknown) {
+  } catch (e) {
     cached.promise = null;
-    throw error;
+    throw e;
   }
-
   return cached.conn;
 }
 
