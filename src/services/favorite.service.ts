@@ -15,7 +15,7 @@ export class FavoriteService {
 
     if (existingFavorite) {
       await Favorite.findByIdAndDelete(existingFavorite._id);
-      return { message: "Receta eliminada de favoritos", isFavorite: false };
+      return { message: "Recipe removed from favorites", isFavorite: false };
     }
 
     const newFavorite = new Favorite({
@@ -24,6 +24,6 @@ export class FavoriteService {
     });
     
     await newFavorite.save();
-    return { message: "Receta agregada a favoritos", isFavorite: true };
+    return { message: "Recipe added to favorites", isFavorite: true };
   }
 }

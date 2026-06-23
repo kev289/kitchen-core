@@ -8,13 +8,13 @@ export async function POST(req: Request) {
         const validations = RegisterValidation.safeParse(body);
 
         if (!validations.success) {
-            return NextResponse.json({ error: "Datos inválidos" }, { status: 400 });
+            return NextResponse.json({ error: "Invalid request data" }, { status: 400 });
         }
 
         const user = await userService.register(validations.data);
 
         return NextResponse.json({
-            message: "Usuario creado con éxito",
+            message: "User created successfully",
             user: { name: user.name, email: user.email }
         }, { status: 201 });
 
@@ -22,6 +22,6 @@ export async function POST(req: Request) {
         if (error instanceof Error) {
             return NextResponse.json({ error: error.message }, { status: 400 });
         }
-        return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
+        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 }

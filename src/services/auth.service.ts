@@ -17,7 +17,7 @@ export const userService = {
 
         const existingUser = await UserModel.findOne({ email: emailSanitized });
         if (existingUser) {
-            throw new Error("El correo ya está registrado"); 
+            throw new Error("Email is already registered"); 
         }
 
         const hashPassword = await authLib.hashPassword(data.password);
@@ -28,8 +28,30 @@ export const userService = {
             password: hashPassword,
         });
 
-        sendEmail(newUser.email, "¡Bienvenido a GourmetDev!", "<p>Gracias por registrarte en nuestra plataforma de recetas.</p>")
-          .catch(() => console.log("[AUTH] Email skipped — no rompe el registro"));
+        const html = `
+          <div style="font-family: system-ui, sans-serif; max-width: 480px; margin: 0 auto; padding: 32px 24px; background: #f9f9f9; border-radius: 16px;">
+            <div style="text-align: center; margin-bottom: 24px;">
+              <span style="font-size: 40px;">🍽</span>
+            </div>
+            <h1 style="font-size: 22px; font-weight: 700; color: #111; margin: 0 0 8px; text-align: center;">
+              ¡Bienvenido, ${newUser.name}!
+            </h1>
+            <p style="font-size: 15px; color: #555; line-height: 1.6; text-align: center; margin: 0 0 24px;">
+              Gracias por registrarte en <strong>GourmetDev</strong>. Ya podés descubrir, guardar y compartir las mejores recetas de cocina.
+            </p>
+            <a href="${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"}/login"
+               style="display: block; width: fit-content; margin: 0 auto; padding: 12px 32px; background: #111; color: #fff; text-decoration: none; border-radius: 999px; font-size: 14px; font-weight: 600;">
+              Empezar a cocinar
+            </a>
+            <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 32px 0 16px;" />
+            <p style="font-size: 12px; color: #999; text-align: center; margin: 0;">
+              GourmetDev — Recetas para todos los gustos
+            </p>
+          </div>
+        `;
+
+        sendEmail(newUser.email, "¡Bienvenido a GourmetDev!", html)
+          .catch(() => console.log("[AUTH] Email skipped — registration still succeeds"));
 
         return newUser;
     },
@@ -41,16 +63,16 @@ export const userService = {
 
         const user = await UserModel.findOne({ email: emailSanitized });
         if (!user) {
-            throw new Error("Credenciales inválidas");
+            throw new Error("Invalid credentials");
         }
 
         const isPasswordValid = await authLib.comparePassword(data.password, user.password);
         if (!isPasswordValid) {
-            throw new Error("Credenciales inválidas");
+            throw new Error("Invalid credentials");
         }
 
         if (!user._id) {
-            throw new Error("Error en el identificador del usuario");
+            throw new Error("Invalid user identifier");
         }
 
         const payload = {
@@ -76,7 +98,7 @@ export const userService = {
         await connectDB();
         const user = await UserModel.findById(id).select("-password");
         if (!user) {
-            throw new Error("Usuario no encontrado");
+            throw new Error("User not found");
         }
         return user;
     }

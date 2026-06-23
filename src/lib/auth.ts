@@ -47,7 +47,7 @@ export const authLib = {
         }
 
         if (!token) {
-            throw new Error("No autenticado");
+            throw new Error("Not authenticated");
         }
 
         const { payload } = await jwtVerify(token, JWT_SECRET);

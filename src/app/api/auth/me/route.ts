@@ -13,7 +13,7 @@ export async function GET() {
 
     const rawSecret = process.env.JWT_SECRET;
     if (!rawSecret) {
-      return NextResponse.json({ error: "Error de configuración" }, { status: 500 });
+      return NextResponse.json({ error: "Configuration error" }, { status: 500 });
     }
 
     const secret = new TextEncoder().encode(rawSecret);

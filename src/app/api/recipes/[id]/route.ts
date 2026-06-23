@@ -10,11 +10,11 @@ export async function GET(
     const recipe = await RecipeService.getRecipeById(id);
 
     if (!recipe) {
-      return NextResponse.json({ error: "Receta no encontrada" }, { status: 404 });
+      return NextResponse.json({ error: "Recipe not found" }, { status: 404 });
     }
 
     return NextResponse.json(recipe, { status: 200 });
   } catch {
-    return NextResponse.json({ error: "Error al obtener la receta" }, { status: 500 });
+    return NextResponse.json({ error: "Error fetching the recipe" }, { status: 500 });
   }
 }

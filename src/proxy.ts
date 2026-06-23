@@ -29,12 +29,12 @@ async function verifyToken(token: string) {
 export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // ── Assets estáticos ──
+  // static assets
   if (pathname.startsWith('/_next') || pathname === '/favicon.ico') {
     return NextResponse.next();
   }
 
-  // ── API pública (login, register y GET recetas) ──
+  // public API routes (login, register, GET recipes)
   if (pathname.startsWith('/api/auth/login') || pathname.startsWith('/api/auth/register')) {
     return NextResponse.next();
   }
@@ -43,25 +43,25 @@ export async function proxy(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // ── API protegida ──
+  // protected API routes
   if (pathname.startsWith('/api/')) {
     const token = await getTokenFromRequest(req);
     if (!token) {
-      return NextResponse.json({ error: 'Acceso denegado: Token requerido' }, { status: 401 });
+      return NextResponse.json({ error: 'Access denied: token required' }, { status: 401 });
     }
     const payload = await verifyToken(token);
     if (!payload) {
-      return NextResponse.json({ error: 'Sesión expirada o inválida' }, { status: 403 });
+      return NextResponse.json({ error: 'Session expired or invalid' }, { status: 403 });
     }
     return NextResponse.next();
   }
 
-  // ── Frontend público (solo login y register) ──
+  // public frontend pages (login and register)
   if (pathname === '/login' || pathname === '/register') {
     return NextResponse.next();
   }
 
-  // ── Todo lo demás requiere sesión ──
+  // everything else requires an authenticated session
   const token = await getTokenFromRequest(req);
   if (!token) {
     const loginUrl = req.nextUrl.clone();

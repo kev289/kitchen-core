@@ -1,14 +1,14 @@
 import z from "zod";
 
 export const RegisterValidation = z.object({
-    name: z.string().min(2, "Nombre muy corto."),
-    email: z.string().email("Email invalido."),
-    password: z.string().min(8, "Minimo 8 caracteres.")
+    name: z.string().min(2, "Name is too short."),
+    email: z.string().email("Invalid email."),
+    password: z.string().min(8, "Minimum 8 characters.")
 })
 
 export const LoginValidation = z.object({
-    email: z.string().email("Email invalido"),
-    password: z.string(). min(1, "La contraseña es obligatoria.")
+    email: z.string().email("Invalid email"),
+    password: z.string().min(1, "Password is required.")
 })
 
 export const RecipeValidation = z.object({

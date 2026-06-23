@@ -95,7 +95,7 @@ export default function CrearRecetaPage() {
 
       router.push(`/recipes/${data._id}`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Error al crear la receta");
+      setError(err instanceof Error ? err.message : "Error creating the recipe");
     } finally {
       setLoading(false);
     }

@@ -8,13 +8,13 @@ export async function POST(req: Request) {
 
         const validations = LoginValidation.safeParse(body);
         if (!validations.success) {
-            return NextResponse.json({ error: "Datos Inválidos" }, { status: 400 });
+            return NextResponse.json({ error: "Invalid login data" }, { status: 400 });
         }
 
         const { accessToken, refreshToken, user } = await userService.login(validations.data);
 
         const response = NextResponse.json({
-            message: "Inicio de sesión exitoso",
+            message: "Login successful",
             user,
             accessToken
         }, { status: 200 });
@@ -38,6 +38,6 @@ export async function POST(req: Request) {
         if (error instanceof Error) {
             return NextResponse.json({ error: error.message }, { status: 401 });
         }
-        return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
+        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 }

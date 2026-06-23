@@ -8,7 +8,7 @@ export async function GET(req: Request) {
     const favorites = await FavoriteService.getFavoritesByUser(userId);
     return NextResponse.json(favorites, { status: 200 });
   } catch {
-    return NextResponse.json({ error: "No autorizado o error interno" }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized or internal error" }, { status: 401 });
   }
 }
 
@@ -20,6 +20,6 @@ export async function POST(req: Request) {
     const result = await FavoriteService.toggleFavorite(userId, recipeId);
     return NextResponse.json(result, { status: 200 });
   } catch {
-    return NextResponse.json({ error: "No autorizado o error interno" }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized or internal error" }, { status: 401 });
   }
 }

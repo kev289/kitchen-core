@@ -31,7 +31,6 @@ export const sendEmail = async (to: string, subject: string, html: string) => {
       },
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const transporter = nodemailer.createTransport(transporterOptions as any);
 
     await transporter.sendMail({
@@ -41,9 +40,9 @@ export const sendEmail = async (to: string, subject: string, html: string) => {
       html,
     });
 
-    console.log('Correo enviado exitosamente');
+    console.log('Email sent successfully');
   } catch (error) {
-    console.error('Error al enviar el correo:', error);
+    console.error('Error sending email:', error);
     throw error;
   }
 };

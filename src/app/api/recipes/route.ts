@@ -8,7 +8,7 @@ export async function GET() {
     const recipes = await RecipeService.getAllRecipes();
     return NextResponse.json(recipes, { status: 200 });
   } catch {
-    return NextResponse.json({ error: "Error al obtener las recetas" }, { status: 500 });
+    return NextResponse.json({ error: "Error fetching recipes" }, { status: 500 });
   }
 }
 
@@ -30,6 +30,6 @@ export async function POST(req: Request) {
 
     return NextResponse.json(newRecipe, { status: 201 });
   } catch {
-    return NextResponse.json({ error: "Error interno al procesar la receta" }, { status: 500 });
+    return NextResponse.json({ error: "Internal error processing recipe" }, { status: 500 });
   }
 }

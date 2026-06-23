@@ -85,7 +85,7 @@ export default function Navbar() {
         )}
       </div>
 
-      {/* Mobile menu (solo cuando hay sesión) */}
+      {/* Mobile menu shown when the user is signed in */}
       {menuOpen && user && (
         <div className="md:hidden border-t border-gray-100 bg-white/95 backdrop-blur-md px-4 py-4 space-y-1 text-sm">
           <Link

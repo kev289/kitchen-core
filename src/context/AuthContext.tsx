@@ -85,7 +85,7 @@ export function AuthProvider({ children }: { readonly children: React.ReactNode 
     try {
       await fetch("/api/auth/logout", { method: "POST" });
     } catch {
-      // si la API falla, igual limpiamos sesion local
+      // if the API fails, still clear local session
     }
     setUser(null);
     router.push("/login");
@@ -101,7 +101,7 @@ export function AuthProvider({ children }: { readonly children: React.ReactNode 
 export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useAuth debe usarse dentro de un AuthProvider");
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 }

@@ -30,7 +30,7 @@ export default function RegisterPage() {
     try {
       await register(name, email, password);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Error al registrarse");
+      setError(err instanceof Error ? err.message : "Error registering the user");
     } finally {
       setLoading(false);
     }
